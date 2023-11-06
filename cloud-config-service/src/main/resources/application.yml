@@ -1,0 +1,21 @@
+server:
+   port: 8888
+spring:
+  application:
+    name: CONFIG-SERVICE
+  cloud:
+    config:
+      server:
+        git:
+          uri:  https://github.com/niranjanaC2023/cloud-config-server
+
+#Eureka Server Configuration
+eureka:
+  instance:
+    hostname: localhost
+    prefer-ip-address: true
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+       default-zone: http://localhost:8761/eureka

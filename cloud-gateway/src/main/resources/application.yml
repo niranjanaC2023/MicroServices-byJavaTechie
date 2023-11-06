@@ -1,0 +1,59 @@
+server:
+   port: 2000
+
+
+spring:
+  application:
+    name: CLOUD-GATEWAY
+  config:
+     import: optional:configserver:http://localhost:8888
+  cloud:
+    gateway:
+      routes:
+      - id: order-service
+        uri: lb://ORDERR-SERVICE
+        predicates:
+        - Path=/order/**
+#        filters:
+#        - name: CircuitBreaker
+#          args:
+#            name: order-service
+#            fallbackuri: forward:/orderFallBack
+
+      - id: payment-service
+        uri: lb://PAYMENTT-SERVICE
+        predicates:
+        - Path=/payment/**
+#        filters:
+#        - name: CircuitBreaker
+#          args:
+#            name: payment-service
+#            fallbackuri: forward:/paymentFallBack
+
+#Eureka Server Configuration
+#eureka:
+#  instance:
+#    hostname: localhost
+#    prefer-ip-address: true
+#  client:
+#    fetch-registry: true
+#    register-with-eureka: true
+#    service-url:
+#       default-zone: http://localhost:8761/eureka
+       
+#management:
+#  endpoints:
+#    web:
+#      exposure:
+#        include: hystrix.stream
+#        
+#hystrix:
+#   command:
+#      fallbackcmd:
+#         execution:
+#            isolation:
+#               thread:
+#                  timeoutInMilliseconds: 5000
+
+
+         

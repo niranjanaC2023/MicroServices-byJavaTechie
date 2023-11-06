@@ -1,0 +1,56 @@
+What is APIGateway?
+An API Gateway is a server or service that acts as an entry point for a collection of microservices or backend services in a distributed architecture. 
+Its primary purpose is to manage, route, secure, and optimize API (Application Programming Interface) requests from clients.
+=>Key features and functions of an API Gateway include:
+Request Routing,Load Balancing,Authentication and Authorization,Rate Limiting,Logging,Security,Error Handling
+<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-gateway</artifactId>
+		</dependency>
+<!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-netflix-eureka-client -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+		</dependency>
+=>after added these two dependency, add @EnableDiscoveryClient annotation in main class.
+=>Configure this ApiGateway project with Eureka in application.yml and also configure all the service-name and endpoint in application.yml
+server:
+  port: 2003
+  
+spring:
+  application:
+    name: API-GATEWAY-FOR-SERVICE
+  cloud:
+    gateway:
+      routes:
+      - id: order-service
+        uri: lb://ORDER-SERVICE
+        predicates:
+        - Path=/order/**
+        
+      - id: payment-service
+        uri: lb://PAYMENT-SERVICE
+        predicates:
+        - Path=/payment/**
+        
+      
+eureka:
+  instance:
+    #instance-id: ${spring.application.name}:${random.value}
+    prefer-ip-address: true
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+       default-zone: http://localhost:8761/eureka
+
+=>If middle of the execution, if any serivce will down then we will get that perticular endpoint exception so to handle it we use
+fallbackmethod using hystrix(iircuitbreaker)
+<!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-netflix-hystrix -->
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
+    <version>2.2.10.RELEASE</version>
+</dependency>
+
+
